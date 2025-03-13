@@ -1,0 +1,25 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: IssueTracker
+  datasource:
+    url: jdbc:postgresql://localhost:5432/issue_tracker
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: validate
+      properties:
+        hibernate:
+          format_sql: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+    flyway:
+      enabled: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
