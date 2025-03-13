@@ -2,24 +2,20 @@ server:
   port: 8083
 
 spring:
-  application:
-    name: IssueTracker
   datasource:
-    url: jdbc:postgresql://localhost:5432/issue_tracker
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-    jpa:
+    url: jdbc:mysql://localhost:3306/issue_tracker  # MySQL database URL
+    username: root  # Username for MySQL
+    password: root  # Password for MySQL
+  jpa:
+    hibernate:
+      ddl-auto: update  # This will automatically create tables based on your entities
+    properties:
       hibernate:
-        ddl-auto: validate
-      properties:
-        hibernate:
-          format_sql: true
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-      show-sql: true
-    flyway:
-      enabled: true
+        dialect: org.hibernate.dialect.MySQL8Dialect  # MySQL dialect for Hibernate
+    show-sql: true  # Display SQL queries in the logs
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
+flyway:
+  url: jdbc:mysql://localhost:3306/issue_tracker  # Flyway URL for MySQL
+  user: root  # Flyway user
+  password: root  # Flyway password
+  locations: classpath:db/migration  # Flyway migration folder

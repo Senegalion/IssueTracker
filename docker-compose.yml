@@ -1,17 +1,16 @@
 version: '3.8'
+
 services:
-  postgres:
-    image: postgres:15
-    container_name: issue_tracker_db
+  mysql:
+    image: mysql:8.0
     restart: always
-    environment:
-      POSTGRES_DB: issue_tracker
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Set the root password
+      MYSQL_DATABASE: issue_tracker
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - db-data:/var/lib/mysql
 
 volumes:
-  pgdata:
+  db-data:
