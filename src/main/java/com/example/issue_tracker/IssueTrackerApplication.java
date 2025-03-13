@@ -1,4 +1,4 @@
-package com.issuetracker.issuetracker;
+package com.example.issue_tracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
