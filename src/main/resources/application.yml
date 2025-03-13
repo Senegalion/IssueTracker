@@ -3,19 +3,23 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/issue_tracker  # MySQL database URL
-    username: root  # Username for MySQL
-    password: root  # Password for MySQL
+    url: jdbc:mysql://localhost:3306/issue_tracker
+    username: root
+    password: root
+
   jpa:
     hibernate:
-      ddl-auto: update  # This will automatically create tables based on your entities
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect  # MySQL dialect for Hibernate
-    show-sql: true  # Display SQL queries in the logs
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+  security:
+    user:
+      name: admin
+      password: admin
 
 flyway:
-  url: jdbc:mysql://localhost:3306/issue_tracker  # Flyway URL for MySQL
-  user: root  # Flyway user
-  password: root  # Flyway password
-  locations: classpath:db/migration  # Flyway migration folder
+  url: jdbc:mysql://localhost:3306/issue_tracker
+  user: root
+  password: root
+  locations: classpath:db/migration

@@ -7,7 +7,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root  # Set the root password
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: issue_tracker
     volumes:
       - db-data:/var/lib/mysql
