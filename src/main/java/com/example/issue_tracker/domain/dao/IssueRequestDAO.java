@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class IssueRequestDto {
+public class IssueRequestDAO {
     private String description;
     private String location;
     private String latitude;

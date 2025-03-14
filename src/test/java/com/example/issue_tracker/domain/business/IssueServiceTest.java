@@ -1,6 +1,6 @@
 package com.example.issue_tracker.domain.business;
 
-import com.example.issue_tracker.domain.dao.IssueRequestDto;
+import com.example.issue_tracker.domain.dao.IssueRequestDAO;
 import com.example.issue_tracker.domain.dao.IssueResponseDAO;
 import com.example.issue_tracker.domain.exceptions.IssueNotFoundException;
 import com.example.issue_tracker.domain.exceptions.TechnicianNotFoundException;
@@ -32,7 +32,7 @@ class IssueServiceTest {
     @Test
     void should_create_issue_successfully() {
         // given
-        IssueRequestDto request = IssueRequestDto.builder()
+        IssueRequestDAO request = IssueRequestDAO.builder()
                 .description("Test issue")
                 .latitude("52.2298")
                 .longitude("21.0122")

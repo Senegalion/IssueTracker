@@ -1,7 +1,8 @@
 package com.example.issue_tracker.domain.business;
 
-import com.example.issue_tracker.domain.dao.IssueRequestDto;
+import com.example.issue_tracker.domain.dao.IssueRequestDAO;
 import com.example.issue_tracker.domain.dao.IssueResponseDAO;
+import com.example.issue_tracker.domain.dao.mapper.IssueDAOMapper;
 import com.example.issue_tracker.domain.exceptions.IssueNotFoundException;
 import com.example.issue_tracker.domain.exceptions.TechnicianNotFoundException;
 import com.example.issue_tracker.infrastructure.database.entity.IssueEntity;
@@ -19,23 +20,14 @@ public class IssueService {
     private final TechnicianRepository technicianRepository;
 //    private final GoogleMapsService googleMapsService;
 
-    public IssueResponseDAO createIssue(IssueRequestDto request) {
+    public IssueResponseDAO createIssue(IssueRequestDAO request) {
 //        String location = googleMapsService.getAddressFromCoordinates(request.getLatitude(), request.getLongitude());
         String location = "some location";
 
-        IssueEntity issue = IssueEntity.builder()
-                .description(request.getDescription())
-                .status(IssueStatus.NEW)
-                .location(location)
-                .latitude(request.getLatitude())
-                .longitude(request.getLongitude())
-                .build();
+        IssueEntity issue = IssueDAOMapper.mapToIssueEntity(request);
 
         IssueEntity savedIssue = issueRepository.save(issue);
-        return IssueResponseDAO.builder()
-                .issueId(savedIssue.getIssueId())
-                .message(String.format("Issue with id: [%d] has been created", savedIssue.getIssueId()))
-                .build();
+        return IssueDAOMapper.mapFromIssueEntity(savedIssue);
     }
 
     public IssueResponseDAO assignTechnician(Long issueId, Long technicianId) {
