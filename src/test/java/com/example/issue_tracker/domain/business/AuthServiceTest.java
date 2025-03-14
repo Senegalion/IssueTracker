@@ -49,7 +49,7 @@ class AuthServiceTest {
     @Test
     void should_return_user_registered_successfully_when_user_had_registered() {
         // given
-        UserDAO userDAO = new UserDAO("John", "Doe", "testUser", "test@example.com", "password");
+        UserDAO userDAO = new UserDAO(1L, "John", "Doe", "testUser", "test@example.com", "password");
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.empty());
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
@@ -113,7 +113,7 @@ class AuthServiceTest {
         UserEntity existingUser = UserEntity.builder().username("testUser").email("test@example.com").build();
         when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(existingUser));
 
-        UserDAO userDAO = new UserDAO("John", "Doe", "testUser", "test@example.com", "password");
+        UserDAO userDAO = new UserDAO(1L, "John", "Doe", "testUser", "test@example.com", "password");
 
         // when & then
         InvalidUserException exception = assertThrows(InvalidUserException.class, () -> authService.register(userDAO));
@@ -126,7 +126,7 @@ class AuthServiceTest {
         UserEntity existingUser = UserEntity.builder().username("otherUser").email("test@example.com").build();
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(existingUser));
 
-        UserDAO userDAO = new UserDAO("John", "Doe", "testUser", "test@example.com", "password");
+        UserDAO userDAO = new UserDAO(1L, "John", "Doe", "testUser", "test@example.com", "password");
 
         // when & then
         InvalidUserException exception = assertThrows(InvalidUserException.class, () -> authService.register(userDAO));
