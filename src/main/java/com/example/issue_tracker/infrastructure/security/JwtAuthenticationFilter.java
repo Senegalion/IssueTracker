@@ -1,4 +1,4 @@
-package com.example.issue_tracker.infrastructure.infrastructure;
+package com.example.issue_tracker.infrastructure.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
