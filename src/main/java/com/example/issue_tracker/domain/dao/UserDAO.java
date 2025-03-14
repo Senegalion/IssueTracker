@@ -8,6 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class UserDAO {
+    private Long userId;
     private String name;
     private String surname;
     private String username;

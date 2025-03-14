@@ -2,10 +2,7 @@ package com.example.issue_tracker.infrastructure.database.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -16,6 +13,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class IssueEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +32,16 @@ public class IssueEntity {
     private IssueStatus status = IssueStatus.NEW;
 
     private String location;
+
+    @Column(name = "latitude", nullable = false)
+    private String latitude;
+
+    @Column(name = "longitude", nullable = false)
+    private String longitude;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "technician_id", referencedColumnName = "technician_id")
+    private TechnicianEntity technician;
 
     @Column(name = "created_at", updatable = false, nullable = false)
     @CreationTimestamp

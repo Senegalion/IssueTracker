@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "technicians")
 @Getter
@@ -28,4 +30,7 @@ public class TechnicianEntity {
     @NotEmpty(message = "Skillset cannot be empty")
     @Column(columnDefinition = "TEXT")
     private String skillset;
+
+    @OneToMany(mappedBy = "technician", fetch = FetchType.LAZY)
+    private Set<IssueEntity> issues;
 }
