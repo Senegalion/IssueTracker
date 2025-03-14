@@ -5,7 +5,7 @@ import com.example.issue_tracker.api.dto.AuthResponseDTO;
 import com.example.issue_tracker.api.dto.RegisterRequestDTO;
 import com.example.issue_tracker.domain.business.AuthService;
 import com.example.issue_tracker.domain.dao.UserDAO;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthRestController {
 
     private final AuthService authService;
