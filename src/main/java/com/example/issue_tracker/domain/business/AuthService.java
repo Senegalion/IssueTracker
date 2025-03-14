@@ -2,49 +2,39 @@ package com.example.issue_tracker.domain.business;
 
 import com.example.issue_tracker.api.dto.AuthRequestDTO;
 import com.example.issue_tracker.api.dto.AuthResponseDTO;
-import com.example.issue_tracker.api.dto.RegisterRequestDTO;
 import com.example.issue_tracker.infrastructure.database.entity.UserEntity;
 import com.example.issue_tracker.infrastructure.database.repository.jpa.UserRepository;
 import com.example.issue_tracker.infrastructure.security.JwtService;
+import com.example.issue_tracker.infrastructure.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final UserRepository userRepository;
 
-    public String register(RegisterRequestDTO request) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setName(request.getName());
-        userEntity.setSurname(request.getSurname());
-        userEntity.setUsername(request.getUsername());
-        userEntity.setEmail(request.getEmail());
-        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
-
+    public String register(UserEntity userEntity) {
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userRepository.save(userEntity);
         return "User registered successfully";
     }
 
     public AuthResponseDTO login(AuthRequestDTO request) {
-        Optional<UserEntity> userEntityOptional = userRepository.findByUsername(request.getUsername());
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                request.getUsername(), request.getPassword()));
 
-        if (userEntityOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
-        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        String token = jwtService.generateToken(userDetails);
 
-        UserEntity userEntity = userEntityOptional.get();
-        if (!passwordEncoder.matches(request.getPassword(), userEntity.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        String token = jwtService.generateToken(userEntity);
         return new AuthResponseDTO(token);
     }
 }
