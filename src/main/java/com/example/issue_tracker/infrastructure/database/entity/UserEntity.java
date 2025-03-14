@@ -1,14 +1,10 @@
 package com.example.issue_tracker.infrastructure.database.entity;
 
-import com.example.issue_tracker.infrastructure.database.entity.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
@@ -19,6 +15,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +47,7 @@ public class UserEntity {
     @NotEmpty(message = "Role cannot be empty")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private Role role = Role.USER;
 
     @Column(name = "created_at", updatable = false, nullable = false)
