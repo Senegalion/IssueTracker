@@ -4,7 +4,7 @@ import com.example.issue_tracker.api.dto.AuthRequestDTO;
 import com.example.issue_tracker.api.dto.AuthResponseDTO;
 import com.example.issue_tracker.api.dto.RegisterRequestDTO;
 import com.example.issue_tracker.domain.business.AuthService;
-import com.example.issue_tracker.infrastructure.database.entity.UserEntity;
+import com.example.issue_tracker.domain.dao.UserDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +21,15 @@ public class AuthRestController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequestDTO request) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(request.getUsername());
-        userEntity.setPassword(request.getPassword());
-        userEntity.setEmail(request.getEmail());
+        UserDAO userDAO = UserDAO.builder()
+                .name(request.getName())
+                .surname(request.getSurname())
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
 
-        String response = authService.register(userEntity);
+        String response = authService.register(userDAO);
         return ResponseEntity.ok(response);
     }
 
