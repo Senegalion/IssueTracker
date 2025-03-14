@@ -1,25 +1,103 @@
 package com.example.issue_tracker.infrastructure.database.repository.jpa;
 
 import com.example.issue_tracker.infrastructure.database.entity.IssueEntity;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 public class IssueRepositoryTestImpl implements IssueRepository {
+    private final Map<Long, IssueEntity> database = new HashMap<>();
+    private final AtomicLong idGenerator = new AtomicLong(1);
+
     @Override
-    public void flush() {
+    public <S extends IssueEntity> S save(S entity) {
+        if (entity.getIssueId() == null) {
+            entity.setIssueId(idGenerator.getAndIncrement());
+        }
+        database.put(entity.getIssueId(), entity);
+        return entity;
+    }
+
+    @Override
+    public Optional<IssueEntity> findById(Long id) {
+        return Optional.ofNullable(database.get(id));
+    }
+
+    @Override
+    public List<IssueEntity> findAll() {
+        return new ArrayList<>(database.values());
+    }
+
+    @Override
+    public void deleteAll() {
+        database.clear();
+    }
+
+    @Override
+    public List<IssueEntity> findAll(Sort sort) {
+        return findAll();
+    }
+
+    @Override
+    public Page<IssueEntity> findAll(Pageable pageable) {
+        List<IssueEntity> issues = new ArrayList<>(database.values());
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), issues.size());
+
+        List<IssueEntity> pageContent = issues.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, issues.size());
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return database.containsKey(id);
+    }
+
+    @Override
+    public long count() {
+        return database.size();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        database.remove(id);
+    }
+
+    @Override
+    public void delete(IssueEntity entity) {
+        database.remove(entity.getIssueId());
+    }
+
+    @Override
+    public List<IssueEntity> findAllById(Iterable<Long> longs) {
+        return null;
+    }
+
+    @Override
+    public <S extends IssueEntity> List<S> saveAll(Iterable<S> entities) {
+        return null;
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends Long> longs) {
 
     }
 
     @Override
+    public void deleteAll(Iterable<? extends IssueEntity> entities) {
+
+    }
+
+    @Override
+    public void flush() {
+    }
+
+    @Override
     public <S extends IssueEntity> S saveAndFlush(S entity) {
-        return null;
+        return save(entity);
     }
 
     @Override
@@ -29,17 +107,14 @@ public class IssueRepositoryTestImpl implements IssueRepository {
 
     @Override
     public void deleteAllInBatch(Iterable<IssueEntity> entities) {
-
     }
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<Long> longs) {
-
+    public void deleteAllByIdInBatch(Iterable<Long> ids) {
     }
 
     @Override
     public void deleteAllInBatch() {
-
     }
 
     @Override
@@ -89,76 +164,6 @@ public class IssueRepositoryTestImpl implements IssueRepository {
 
     @Override
     public <S extends IssueEntity, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-        return null;
-    }
-
-    @Override
-    public <S extends IssueEntity> S save(S entity) {
-        return null;
-    }
-
-    @Override
-    public <S extends IssueEntity> List<S> saveAll(Iterable<S> entities) {
-        return null;
-    }
-
-    @Override
-    public Optional<IssueEntity> findById(Long aLong) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean existsById(Long aLong) {
-        return false;
-    }
-
-    @Override
-    public List<IssueEntity> findAll() {
-        return null;
-    }
-
-    @Override
-    public List<IssueEntity> findAllById(Iterable<Long> longs) {
-        return null;
-    }
-
-    @Override
-    public long count() {
-        return 0;
-    }
-
-    @Override
-    public void deleteById(Long aLong) {
-
-    }
-
-    @Override
-    public void delete(IssueEntity entity) {
-
-    }
-
-    @Override
-    public void deleteAllById(Iterable<? extends Long> longs) {
-
-    }
-
-    @Override
-    public void deleteAll(Iterable<? extends IssueEntity> entities) {
-
-    }
-
-    @Override
-    public void deleteAll() {
-
-    }
-
-    @Override
-    public List<IssueEntity> findAll(Sort sort) {
-        return null;
-    }
-
-    @Override
-    public Page<IssueEntity> findAll(Pageable pageable) {
         return null;
     }
 }
