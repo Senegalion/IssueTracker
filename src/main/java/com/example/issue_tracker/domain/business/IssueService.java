@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class IssueService {
     private final IssueRepository issueRepository;
     private final TechnicianRepository technicianRepository;
-    private final GoogleMapsService googleMapsService;
+//    private final GoogleMapsService googleMapsService;
 
     public IssueResponseDAO createIssue(IssueRequestDto request) {
 //        String location = googleMapsService.getAddressFromCoordinates(request.getLatitude(), request.getLongitude());
@@ -25,14 +25,17 @@ public class IssueService {
 
         IssueEntity issue = IssueEntity.builder()
                 .description(request.getDescription())
+                .status(IssueStatus.NEW)
+                .location(location)
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
-                .location(location)
-                .status(IssueStatus.NEW)
                 .build();
 
-        issueRepository.save(issue);
-        return new IssueResponseDAO(issue.getIssueId(), issue.getDescription(), issue.getLocation(), issue.getStatus());
+        IssueEntity savedIssue = issueRepository.save(issue);
+        return IssueResponseDAO.builder()
+                .issueId(savedIssue.getIssueId())
+                .message(String.format("Issue with id: [%d] has been created", savedIssue.getIssueId()))
+                .build();
     }
 
     public IssueResponseDAO assignTechnician(Long issueId, Long technicianId) {
@@ -51,7 +54,7 @@ public class IssueService {
 
         issueRepository.save(issue);
 
-        return new IssueResponseDAO(issue.getIssueId(), issue.getDescription(), issue.getLocation(), issue.getStatus());
+        return new IssueResponseDAO(issue.getIssueId(), String.format("Technician with id: [%d] has been assigned to your issue", technicianId));
     }
 
     public IssueResponseDAO changeIssueStatus(Long issueId, IssueStatus status) {
@@ -63,6 +66,6 @@ public class IssueService {
         issue.setStatus(status);
         issueRepository.save(issue);
 
-        return new IssueResponseDAO(issue.getIssueId(), issue.getDescription(), issue.getLocation(), issue.getStatus());
+        return new IssueResponseDAO(issue.getIssueId(), "Issue with id");
     }
 }
